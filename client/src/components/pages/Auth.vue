@@ -15,7 +15,7 @@
               <v-form v-else ref="form" v-model="valid" lazy-validation>
                 <v-container>
                   <v-text-field v-model="credentials.username" :rules="rules.username"
-                                :counter="70" label="Email address" maxlength="70" required />
+                                :counter="70" label="Username" maxlength="70" required />
                   <v-text-field type="password" v-model="credentials.password" :rules="rules.password"
                                 :counter="20" label="Password" maxlength="20" required />
                 </v-container>
@@ -29,6 +29,10 @@
 </template>
 
 <script>
+    import axios from 'axios';
+    import swal from 'sweetalert2';
+    import router from '../../router';
+
     export default {
         name: "Auth",
         data: () => ({
@@ -49,6 +53,25 @@
         }),
         methods: {
           login() {
+            if (this.$refs.form.validate()) {
+              this.loading = true;
+              axios.post('http://localhost:8000/auth/', this.credentials).then(res => {
+                this.$session.start();
+                this.$session.set('token', res.data.token);
+                router.push('/');
+              }).catch(e => {
+                console.log(e);
+                this.loading = false;
+                swal({
+                  type: 'warning',
+                  title: 'Error',
+                  text: 'Wrong username or password',
+                  showConfirmButton: false,
+                  showCloseButton: false,
+                  timer: 3000
+                })
+              })
+            }
           }
         }
     }
