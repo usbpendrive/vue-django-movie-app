@@ -14,9 +14,9 @@
               </v-layout>
               <v-form v-else ref="form" v-model="valid" lazy-validation>
                 <v-container>
-                  <v-text-field v-model="credentials.username"
+                  <v-text-field v-model="credentials.username" :rules="rules.username"
                                 :counter="70" label="Email address" maxlength="70" required />
-                  <v-text-field type="password" v-model="credentials.password"
+                  <v-text-field type="password" v-model="credentials.password" :rules="rules.password"
                                 :counter="20" label="Password" maxlength="20" required />
                 </v-container>
                 <v-btn class="pink white--text" :disabled="!valid" @click="login">Login</v-btn>
@@ -34,7 +34,18 @@
         data: () => ({
           credentials: {},
           valid: true,
-          loading: false
+          loading: false,
+          rules: {
+            username: [
+              v => !!v || "Username is required",
+              v => (v && v.length >  3) || "A username must be more than 3 characters long",
+              v => /^[a-z0-9_]+$/.test(v) || "A username can only contains letters and digits"
+            ],
+            password: [
+              v => !!v || "Password is required",
+              v => (v && v.length > 7) || "The password must be longer than 7 characters"
+            ]
+          }
         }),
         methods: {
           login() {
