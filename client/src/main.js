@@ -5,8 +5,10 @@ import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import VueSession from 'vue-session'
 
 Vue.use(Vuetify)
+Vue.use(VueSession)
 
 Vue.config.productionTip = false
 
